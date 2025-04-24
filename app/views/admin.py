@@ -24,6 +24,13 @@ def admin_required(view_func):
         if not current_user.is_admin():
             flash('Admin privileges required')
             return redirect(url_for('main.index'))
+            
+        # Check if admin needs to change password
+        # Skip the check for the change_password route to avoid redirect loop
+        if current_user.force_password_change and request.endpoint != 'admin.change_password':
+            flash('You must change your password before continuing', 'warning')
+            return redirect(url_for('admin.change_password'))
+            
         return view_func(*args, **kwargs)
     return wrapped_view
 
@@ -67,6 +74,16 @@ class UserEditForm(FlaskForm):
     role = StringField('Role', validators=[DataRequired()])
     submit = SubmitField('Update User')
 
+class PasswordChangeForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired()])
+    submit = SubmitField('Change Password')
+    
+    def validate_confirm_password(self, field):
+        if field.data != self.new_password.data:
+            raise ValidationError('Passwords do not match')
+
 @bp.route('/')
 @admin_required
 def dashboard():
@@ -81,7 +98,8 @@ def register_admin():
         user = User(
             username=form.username.data,
             password=form.password.data,
-            role='admin'
+            role='admin',
+            force_password_change=True
         )
         db.session.add(user)
         db.session.commit()
@@ -307,4 +325,21 @@ def upload_users():
             
         return redirect(url_for('admin.dashboard'))
     
-    return render_template('admin/upload_users.html', form=form) 
+    return render_template('admin/upload_users.html', form=form)
+
+@bp.route('/change-password', methods=['GET', 'POST'])
+@admin_required
+def change_password():
+    form = PasswordChangeForm()
+    
+    if form.validate_on_submit():
+        if current_user.verify_password(form.current_password.data):
+            current_user.password = form.new_password.data
+            current_user.force_password_change = False  # Reset the force password change flag
+            db.session.commit()
+            flash('Your password has been changed successfully')
+            return redirect(url_for('admin.dashboard'))
+        else:
+            flash('Current password is incorrect')
+    
+    return render_template('admin/change_password.html', form=form) 

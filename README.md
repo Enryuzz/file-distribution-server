@@ -52,34 +52,14 @@ flask run
 ./docker-compose-up.sh
 ```
 
-2. Production mode:
-```
-./docker-compose-up.sh prod
-```
-
-3. To stop the services:
-```
-./docker-compose-down.sh      # For development
-./docker-compose-down.sh prod # For production
-```
-
 #### Manual Docker Compose Commands
 
 1. Development:
 ```
-docker-compose up -d
+docker-compose up --build -d
 ```
 
-2. Using Docker Compose (production):
-```
-# Set a secure SECRET_KEY
-export SECRET_KEY=your-secure-secret-key
-
-# Start the containers
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-3. Access the application:
+2. Access the application:
 ```
 http://localhost:5000
 ```
@@ -89,12 +69,12 @@ http://localhost:5000
 The system comes with two sample users:
 
 - User ID: 1
-  - Username: SMKN PASIRIAN
-  - Password: 147ce8cb-4781-45e0-abcf-d1409187b9d2
+  - Username: SMKN 1
+  - Password: xaxax2
 
 - User ID: 2
-  - Username: SMKN 4 MALANG
-  - Password: 47653001-2de5-497e-894a-e0d335f00403
+  - Username: SMKN 2
+  - Password: hahah2
 
 The default admin credentials are:
 - Username: admin
@@ -132,23 +112,6 @@ The default admin credentials are:
 When using Docker, the application uses persistent volumes:
 - `file_data`: Stores all user files
 - `db_data`: Stores the SQLite database
-
-## Production Configuration
-
-For production deployment:
-1. Copy `.env.example` to `.env`:
-   ```
-   cp .env.example .env
-   ```
-2. Edit `.env` to set a secure random SECRET_KEY
-3. Run using the production configuration:
-   ```
-   ./docker-compose-up.sh prod
-   ```
-4. For better security, consider:
-   - Using a proper reverse proxy (nginx/Apache) with HTTPS
-   - Setting up proper firewall rules
-   - Regular security updates for the host system
 
 ## Security
 

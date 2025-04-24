@@ -1,4 +1,5 @@
 import os
+import secrets
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -13,8 +14,11 @@ def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     
+    # Generate a random SECRET_KEY
+    secret_key = secrets.token_hex(32)
+    
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY=secret_key,
         SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.instance_path, 'app.sqlite'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         UPLOAD_FOLDER=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data'),
@@ -69,9 +73,11 @@ def init_db():
         admin = User.query.filter_by(role='admin').first()
         if not admin:
             admin = User(
+                id=0,
                 username='admin',
                 password='admin',
-                role='admin'
+                role='admin',
+                force_password_change=True
             )
             db.session.add(admin)
             

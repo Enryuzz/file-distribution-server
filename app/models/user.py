@@ -7,6 +7,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), default='user')  # 'user' or 'admin'
+    force_password_change = db.Column(db.Boolean, default=False)
     
     @property
     def password(self):

@@ -44,20 +44,19 @@ def bootstrap(csv_file):
         #     click.echo('Users imported successfully.')
         
         # Ensure admin exists
-        print("[+] check the admin")
-        admin = User.query.filter_by(username='admin').first()
-        if not admin:
-            print("[+] Add admin")
-            admin = User(
-                id=0,
-                username='admin',
-                password='admin',
-                role='admin'
-            )
-            db.session.add(admin)
-            db.session.commit()
-            click.echo('Admin user created with default credentials (admin/admin).')
-            click.echo('WARNING: Change the admin password after first login.')
+        # admin = User.query.filter_by(username='admin').first()
+        # if not admin:
+        #     print("[+] Add admin")
+        #     admin = User(
+        #         id=1000,
+        #         username='admin',
+        #         password='admin',
+        #         role='admin'
+        #     )
+        #     db.session.add(admin)
+        #     db.session.commit()
+        #     click.echo('Admin user created with default credentials (admin/admin).')
+        #     click.echo('WARNING: Change the admin password after first login.')
         
         click.echo('Bootstrap complete!')
 

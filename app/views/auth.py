@@ -15,6 +15,10 @@ class LoginForm(FlaskForm):
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        # Check if admin needs to change password
+        if current_user.is_admin() and current_user.force_password_change:
+            flash('You must change your password before continuing', 'warning')
+            return redirect(url_for('admin.change_password'))
         return redirect(url_for('main.index'))
     
     form = LoginForm()
@@ -22,6 +26,12 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user)
+            
+            # Check if admin needs to change password
+            if user.is_admin() and user.force_password_change:
+                flash('You must change your password before continuing', 'warning')
+                return redirect(url_for('admin.change_password'))
+                
             next_page = request.args.get('next')
             if next_page and next_page.startswith('/'):
                 return redirect(next_page)

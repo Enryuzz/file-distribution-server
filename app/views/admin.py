@@ -75,7 +75,7 @@ class UserEditForm(FlaskForm):
     submit = SubmitField('Update User')
 
 class PasswordChangeForm(FlaskForm):
-    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    # current_password = PasswordField('Current Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired()])
     submit = SubmitField('Change Password')
@@ -333,13 +333,13 @@ def change_password():
     form = PasswordChangeForm()
     
     if form.validate_on_submit():
-        if current_user.verify_password(form.current_password.data):
-            current_user.password = form.new_password.data
-            current_user.force_password_change = False  # Reset the force password change flag
-            db.session.commit()
-            flash('Your password has been changed successfully')
-            return redirect(url_for('admin.dashboard'))
-        else:
-            flash('Current password is incorrect')
+        # if current_user.verify_password(form.current_password.data):
+        current_user.password = form.new_password.data
+        current_user.force_password_change = False  # Reset the force password change flag
+        db.session.commit()
+        flash('Your password has been changed successfully')
+        return redirect(url_for('admin.dashboard'))
+        # else:
+        #     flash('Current password is incorrect')
     
     return render_template('admin/change_password.html', form=form) 

@@ -6,41 +6,57 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h3 class="mb-0">Competition File Access</h3>
+            <div class="card-header bg-primary text-white">
+                <div>
+                    <i class="fas fa-sign-in-alt fa-lg me-2"></i>
+                    <h3 class="mb-0 d-inline">Login</h3>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h4>Competition File Distribution</h4>
+                    <p class="text-muted">Please login to access your files</p>
+                </div>
+                
                 <form method="post" novalidate>
                     {{ form.csrf_token }}
                     
-                    <div class="mb-3">
-                        {{ form.username.label(class="form-label") }}
-                        {{ form.username(class="form-control") }}
+                    <div class="mb-4">
+                        <div class="form-floating">
+                            {{ form.username(class="form-control", placeholder="Username") }}
+                            {{ form.username.label }}
+                        </div>
                         {% if form.username.errors %}
-                            <div class="text-danger">
+                            <div class="text-danger mt-1">
                                 {% for error in form.username.errors %}
-                                    {{ error }}
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
                                 {% endfor %}
                             </div>
                         {% endif %}
                     </div>
                     
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control") }}
+                    <div class="mb-4">
+                        <div class="form-floating">
+                            {{ form.password(class="form-control", placeholder="Password") }}
+                            {{ form.password.label }}
+                        </div>
                         {% if form.password.errors %}
-                            <div class="text-danger">
+                            <div class="text-danger mt-1">
                                 {% for error in form.password.errors %}
-                                    {{ error }}
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
                                 {% endfor %}
                             </div>
                         {% endif %}
                     </div>
                     
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary") }}
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
                     </div>
                 </form>
+            </div>
+            <div class="card-footer text-center text-muted py-3">
+                <i class="fas fa-lock me-1"></i> Secure access only
             </div>
         </div>
     </div>

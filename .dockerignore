@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+env/
+
+# Instance folder (will use volume instead)
+instance/
+
+# Git files
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker files (to prevent recursive copying)
+Dockerfile
+docker-compose.yml
+.dockerignore 

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Competition Files{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-dark text-white">
+        <h3 class="mb-0">Your Competition Files</h3>
+    </div>
+    <div class="card-body">
+        <h4>Welcome, {{ current_user.username }}</h4>
+        <p>ID: {{ current_user.id }}</p>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card mb-3 h-100">
+                    <div class="card-header {% if attack_active %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                        Attack Phase: {% if attack_active %}ACTIVE{% else %}INACTIVE{% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p>Files available during attack phase:</p>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.download_file', file_type='readme') }}" class="btn btn-outline-primary btn-sm {% if not attack_active %}disabled{% endif %}">
+                                    Download README
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.download_file', file_type='vpn_c1') }}" class="btn btn-outline-primary btn-sm {% if not attack_active %}disabled{% endif %}">
+                                    Download VPN Config 1
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.download_file', file_type='vpn_c2') }}" class="btn btn-outline-primary btn-sm {% if not attack_active %}disabled{% endif %}">
+                                    Download VPN Config 2
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-3 h-100">
+                    <div class="card-header {% if defense_active %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                        Defense Phase: {% if defense_active %}ACTIVE{% else %}INACTIVE{% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p>Files available during defense phase:</p>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.download_file', file_type='ssh') }}" class="btn btn-outline-primary btn-sm {% if not defense_active %}disabled{% endif %}">
+                                    Download SSH Key
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

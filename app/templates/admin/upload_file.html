@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Files{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h3 class="mb-0">
+                    Upload 
+                    {% if file_type == 'readme' %}
+                        README
+                    {% elif file_type == 'vpn' %}
+                        VPN Configuration
+                    {% elif file_type == 'ssh' %}
+                        SSH Key
+                    {% endif %}
+                    Files
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.csrf_token }}
+                    
+                    <div class="mb-3">
+                        <p>File naming convention:</p>
+                        <ul>
+                            {% if file_type == 'readme' %}
+                                <li><code>readme-team-[ID].txt</code> (e.g., readme-team-1.txt)</li>
+                            {% elif file_type == 'vpn' %}
+                                <li><code>team-[ID]-c1.conf</code> (e.g., team-1-c1.conf)</li>
+                                <li><code>team-[ID]-c2.conf</code> (e.g., team-1-c2.conf)</li>
+                            {% elif file_type == 'ssh' %}
+                                <li><code>team-[ID].pem</code> (e.g., team-1.pem)</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.file.label(class="form-label") }}
+                        {{ form.file(class="form-control") }}
+                        {% if form.file.errors %}
+                            <div class="text-danger">
+                                {% for error in form.file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-info") }}
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

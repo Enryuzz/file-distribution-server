@@ -1,0 +1,33 @@
+# Virtual environment
+venv/
+env/
+
+# Instance folder - contains database
+instance/
+
+# Uploaded files
+data/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Flask env file
+.env
+.flaskenv
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker specific
+.env
+docker-compose.override.yml 

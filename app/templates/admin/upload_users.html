@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Users{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Upload Users from CSV</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.csrf_token }}
+                    
+                    <div class="mb-3">
+                        <p>CSV Format:</p>
+                        <ul>
+                            <li>First row should be a header row</li>
+                            <li>Each subsequent row should contain: ID, Username, Password</li>
+                            <li>Example: <code>1,SMKN PASIRIAN,147ce8cb-4781-45e0-abcf-d1409187b9d2</code></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.csv_file.label(class="form-label") }}
+                        {{ form.csv_file(class="form-control") }}
+                        {% if form.csv_file.errors %}
+                            <div class="text-danger">
+                                {% for error in form.csv_file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

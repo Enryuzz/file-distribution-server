@@ -16,7 +16,7 @@ COPY . .
 RUN mkdir -p data/readme data/vpn data/sshkeys
 
 # Make the entrypoint script executable
-RUN chmod +x /app/docker-entrypoint.sh
+RUN chmod +x /app/run.sh
 
 # Set environment variables
 ENV FLASK_APP=app.py
@@ -28,4 +28,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 5000
 
 # Use the entrypoint script
-ENTRYPOINT ["/app/docker-entrypoint.sh"] 
+ENTRYPOINT ["/app/run.sh"] 

@@ -45,23 +45,16 @@ flask run
 
 ### Option 2: Docker Deployment
 
-#### Using Helper Scripts
-
-1. Development mode:
-```
-./docker-compose-up.sh
-```
-
 #### Manual Docker Compose Commands
 
 1. Development:
 ```
-docker-compose up --build -d
+sudo docker compose up --build -d
 ```
 
 2. Access the application:
 ```
-http://localhost:5000
+http://localhost
 ```
 
 ## User Credentials
@@ -106,17 +99,3 @@ The default admin credentials are:
 - `/data/readme/` - README files for each team
 - `/data/vpn/` - VPN configuration files for each team
 - `/data/sshkeys/` - SSH key files for each team
-
-## Docker Volumes
-
-When using Docker, the application uses persistent volumes:
-- `file_data`: Stores all user files
-- `db_data`: Stores the SQLite database
-
-## Security
-
-- All user passwords are stored with secure hashing
-- Files are only accessible to authorized users
-- Phase-based access controls prevent unauthorized access
-- In production, use a strong SECRET_KEY environment variable
-- Consider placing behind a reverse proxy with HTTPS in production 

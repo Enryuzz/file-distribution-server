@@ -7,8 +7,8 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production
-      - USE_HTTPS=true
       - SSL_DOMAIN=${SSL_DOMAIN:-localhost}  # Domain name for SSL cert, default: localhost
+      - USE_HTTPS=true
     volumes:
       - ./ssl:/app/ssl
     restart: always

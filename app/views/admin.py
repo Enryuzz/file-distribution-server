@@ -3,7 +3,7 @@ import csv
 import zipfile
 import shutil
 from io import TextIOWrapper, BytesIO
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, jsonify
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
@@ -88,7 +88,13 @@ class PasswordChangeForm(FlaskForm):
 @admin_required
 def dashboard():
     users = User.query.filter_by(role='user').all()
-    return render_template('admin/dashboard.html', users=users)
+    attack_phase = Phase.query.filter_by(name='attack').first()
+    defense_phase = Phase.query.filter_by(name='defense').first()
+    
+    return render_template('admin/dashboard.html', 
+                          users=users, 
+                          attack_phase=attack_phase,
+                          defense_phase=defense_phase)
 
 @bp.route('/register-admin', methods=['GET', 'POST'])
 @admin_required
@@ -342,4 +348,30 @@ def change_password():
         # else:
         #     flash('Current password is incorrect')
     
-    return render_template('admin/change_password.html', form=form) 
+    return render_template('admin/change_password.html', form=form)
+
+@bp.route('/toggle-phase', methods=['POST'])
+@admin_required
+def toggle_phase():
+    phase_name = request.form.get('phase')
+    is_active = request.form.get('is_active') == 'true'
+    
+    if phase_name not in ['attack', 'defense']:
+        return jsonify({'success': False, 'message': 'Invalid phase name'})
+    
+    try:
+        phase = Phase.query.filter_by(name=phase_name).first()
+        
+        if not phase:
+            return jsonify({'success': False, 'message': 'Phase not found'})
+        
+        phase.is_active = is_active
+        db.session.commit()
+        
+        return jsonify({
+            'success': True, 
+            'phase': phase_name, 
+            'is_active': is_active
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}) 

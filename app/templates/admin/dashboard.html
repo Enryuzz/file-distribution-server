@@ -2,6 +2,77 @@
 
 {% block title %}Admin Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    .phase-toggle {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .phase-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #28a745;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+    
+    .phase-status {
+        transition: all 0.3s ease;
+    }
+    
+    .phase-status.active {
+        color: #28a745;
+        font-weight: 600;
+    }
+    
+    .phase-status.inactive {
+        color: #dc3545;
+    }
+    
+    .toggle-label {
+        margin-left: 10px;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row mb-4">
     <div class="col-md-12">
@@ -27,11 +98,45 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="list-group">
-                    <a href="{{ url_for('admin.phase_control') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-toggle-on me-2"></i>Enable/Disable Phases</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4 p-3 border rounded">
+                    <div>
+                        <h5><i class="fas fa-crosshairs me-2"></i>Attack Phase</h5>
+                        <p class="text-muted small mb-0">When enabled, users can download README and VPN configs</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span id="attack-status" class="phase-status me-3 {% if attack_phase and attack_phase.is_active %}active{% else %}inactive{% endif %}">
+                            {% if attack_phase and attack_phase.is_active %}
+                                <i class="fas fa-check-circle me-1"></i>Active
+                            {% else %}
+                                <i class="fas fa-times-circle me-1"></i>Inactive
+                            {% endif %}
+                        </span>
+                        <label class="phase-toggle">
+                            <input type="checkbox" id="attack-toggle" data-phase="attack" {% if attack_phase and attack_phase.is_active %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                    <div>
+                        <h5><i class="fas fa-shield-alt me-2"></i>Defense Phase</h5>
+                        <p class="text-muted small mb-0">When enabled, users can download SSH keys</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span id="defense-status" class="phase-status me-3 {% if defense_phase and defense_phase.is_active %}active{% else %}inactive{% endif %}">
+                            {% if defense_phase and defense_phase.is_active %}
+                                <i class="fas fa-check-circle me-1"></i>Active
+                            {% else %}
+                                <i class="fas fa-times-circle me-1"></i>Inactive
+                            {% endif %}
+                        </span>
+                        <label class="phase-toggle">
+                            <input type="checkbox" id="defense-toggle" data-phase="defense" {% if defense_phase and defense_phase.is_active %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,7 +271,7 @@
             <div class="card-header bg-info text-white">
                 <div>
                     <i class="fas fa-file-alt fa-lg me-2"></i>
-                    <h4 class="mb-0 d-inline">File Management</h4>
+                    <h4 class="mb-0 d-inline">Security Settings</h4>
                 </div>
             </div>
             <div class="card-body">
@@ -181,4 +286,83 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the toggle elements
+        const attackToggle = document.getElementById('attack-toggle');
+        const defenseToggle = document.getElementById('defense-toggle');
+        
+        // Function to update phase status
+        function updatePhaseStatus(phase, isActive) {
+            const statusElement = document.getElementById(`${phase}-status`);
+            
+            if (isActive) {
+                statusElement.innerHTML = '<i class="fas fa-check-circle me-1"></i>Active';
+                statusElement.classList.remove('inactive');
+                statusElement.classList.add('active');
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-times-circle me-1"></i>Inactive';
+                statusElement.classList.remove('active');
+                statusElement.classList.add('inactive');
+            }
+            
+            // Show feedback
+        }
+        
+        // Function to toggle phase
+        function togglePhase(phase, isActive) {
+            // Create FormData
+            const formData = new FormData();
+            formData.append('phase', phase);
+            formData.append('is_active', isActive);
+            
+            // Send AJAX request
+            fetch('/admin/toggle-phase', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the UI
+                    updatePhaseStatus(phase, isActive);
+                } else {
+                    // Show error
+                    alert('Error updating phase status: ' + data.message);
+                    // Revert toggle
+                    if (phase === 'attack') {
+                        attackToggle.checked = !isActive;
+                    } else {
+                        defenseToggle.checked = !isActive;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the phase status');
+                // Revert toggle
+                if (phase === 'attack') {
+                    attackToggle.checked = !isActive;
+                } else {
+                    defenseToggle.checked = !isActive;
+                }
+            });
+        }
+        
+        // Add event listeners
+        attackToggle.addEventListener('change', function() {
+            togglePhase('attack', this.checked);
+        });
+        
+        defenseToggle.addEventListener('change', function() {
+            togglePhase('defense', this.checked);
+        });
+    });
+</script>
 {% endblock %} 

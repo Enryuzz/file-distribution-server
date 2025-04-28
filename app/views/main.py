@@ -58,10 +58,10 @@ def download_file(file_type):
     
     # Generate appropriate filename for download
     filename_map = {
-        'readme': f'README-team-{user_id}.txt',
-        'vpn_c1': f'VPN-Client1-team-{user_id}.conf',
-        'vpn_c2': f'VPN-Client2-team-{user_id}.conf',
-        'ssh': f'SSH-Key-team-{user_id}.pem'
+        'readme': f'README-team-{user_id}.txt', # readme-team-1.txt
+        'vpn_c1': f'team-{user_id}-c1.conf', # team-17-c1.conf
+        'vpn_c2': f'team-{user_id}-c2.conf',
+        'ssh': f'ssh-key-team-{user_id}.pem' # team-7.pem
     }
     
     # Return the file for download

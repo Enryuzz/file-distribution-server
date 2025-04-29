@@ -25,6 +25,3 @@ sudo cp /etc/letsencrypt/live/$DOMAIN/privkey.pem ssl/privkey.pem
 sudo cp /etc/letsencrypt/live/$DOMAIN/cert.pem ssl/cert.pem
 sudo cp /etc/letsencrypt/live/$DOMAIN/chain.pem ssl/chain.pem
 
-# Set proper permissions
-echo "Setting proper permissions..."
-chown -R $(id -u):$(id -g) certs/letsencrypt

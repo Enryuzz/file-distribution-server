@@ -5,7 +5,7 @@ WORKDIR /app
 # Install dependencies
 RUN apt update 
 RUN apt install -y sqlite3 openssl
-RUN apt install -y curl certbot && rm -rf /var/lib/apt/lists/*
+RUN apt install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -18,7 +18,6 @@ RUN mkdir -p ssl
 
 # Make the scripts executable
 RUN chmod +x /app/run.sh
-RUN chmod +x /app/ssl/generate_cert.sh
 
 # Set environment variables
 ENV FLASK_APP=app.py

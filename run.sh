@@ -42,3 +42,8 @@ else
     echo "[+] Starting application with HTTP..."
     exec flask run --host=0.0.0.0 --port=5000 
 fi
+
+# sudo apt install openssl
+# sudo apt install certbot
+# sudo apt install nginx
+# sudo mkdir -p /var/www/html/.well-known/acme-challenge

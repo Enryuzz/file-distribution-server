@@ -9,7 +9,6 @@ fi
 
 # Generate SSL certificates if they don't exist and HTTPS is enabled
 if [ "$USE_HTTPS" = "true" ]; then
-    
     echo "[+] Starting application with HTTPS..."
     exec flask run --host=0.0.0.0 --port=5000 --cert=ssl/cert.pem --key=ssl/privkey.pem
 else

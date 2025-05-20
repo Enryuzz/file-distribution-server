@@ -3,7 +3,7 @@ services:
     build:
       context: .
     ports:
-      - "5000:5000"  # HTTP port
+      - "${PORT:-3000}:5000"  # HTTP port, configurable via PORT env variable
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production

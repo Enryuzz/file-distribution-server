@@ -25,5 +25,5 @@ fi
 # Regenerate certificate if needed
 if [ "$REGEN_CERT" = "true" ]; then
     echo "Generating SSL certificates for domain: $SSL_DOMAIN"
-    cd ssl && sudo SSL_DOMAIN="$SSL_DOMAIN" ./generate_letsencrypt.sh
+    sudo SSL_DOMAIN="$SSL_DOMAIN" ./ssl/generate_letsencrypt.sh
 fi

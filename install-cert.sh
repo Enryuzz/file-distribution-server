@@ -26,5 +26,5 @@ fi
 if [ "$REGEN_CERT" = "true" ]; then
     echo "Generating SSL certificates for domain: $SSL_DOMAIN"
     ls -la .
-    sudo SSL_DOMAIN="$SSL_DOMAIN" ./ssl/generate_letsencrypt.sh
+    sudo SSL_DOMAIN="$SSL_DOMAIN" sh ./ssl/generate_letsencrypt.sh
 fi

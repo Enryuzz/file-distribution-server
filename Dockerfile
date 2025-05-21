@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install dependencies
 RUN apt update 
-RUN apt install -y sqlite3 openssl
+RUN apt install -y sqlite3 openssl gunicorn
 RUN apt install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

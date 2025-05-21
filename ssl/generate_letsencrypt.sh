@@ -16,7 +16,7 @@ sudo certbot certonly --standalone \
     --non-interactive \
     --agree-tos \
     --email $EMAIL \
-    -d $DOMAIN 
+    -d $DOMAIN
 
 # Copy certificates to our certs directory
 echo "Copying certificates to certs directory..."
